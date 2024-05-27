@@ -17,6 +17,8 @@ public class WebResponse<T> {
 
     private List<StatusResponse> status;
 
+    private String errors;
+
 }
 
 

@@ -31,7 +31,7 @@ Before getting started, ensure your system meets the following requirements:
 
 ## Endpoint
 
-#### Show All Data Transaction
+#### 1. Show All Data Transaction
 
 - **Metode:** [GET]
 - **Endpoint:** `/api/transactions`
@@ -59,6 +59,55 @@ Before getting started, ensure your system meets the following requirements:
               "id": 0,
               "name": "SUCCESS"
             }
-    ]
+          ],
+          "errors": null
       }
       ```
+#### 1. Get Transaction by Product and Customer
+
+- **Metode:** [GET]
+- **Endpoint:** `/api/transactions/products/3/customers/1`
+
+  #### Response
+    - **Status Code:** [200]
+    - **Response Body:**
+        ```json
+        {
+            "data": [
+              {
+                "id": 3,
+                "productID": "3",
+                "productName": "Lemari",
+                "amount": "1",
+                "customerName": "Budi",
+                "status": 0,
+                "transactionDate": "2024-05-27 11:37:22",
+                "createBy": "admin",
+                "createOn": "2024-05-27 11:37:22"
+              }  
+            ],
+            "status": [
+              {
+                "id": 0,
+                "name": "SUCCESS"
+              }
+            ],
+            "errors": null
+        }
+        ```
+
+  - **Status Code:** [404]
+  - **Response Body:**
+      ```json
+      {
+          "data": null,
+          "status": [
+            {
+              "id": 1,
+              "name": "FAILED"
+            }
+          ],
+          "errors": "Transaction is not found"
+      }
+      ```
+      

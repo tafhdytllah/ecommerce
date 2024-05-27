@@ -6,7 +6,7 @@
 # SHOW TABLES;
 # SELECT * FROM products;
 # SELECT * FROM customers;
-# SELECT * FROM transactions;
+SELECT * FROM transactions;
 
 CREATE TABLE products(
                          id INT AUTO_INCREMENT PRIMARY KEY,
