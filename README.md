@@ -73,19 +73,17 @@ Before getting started, ensure your system meets the following requirements:
     - **Response Body:**
         ```json
         {
-            "data": [
-              {
-                "id": 3,
-                "productID": "3",
-                "productName": "Lemari",
-                "amount": "1",
-                "customerName": "Budi",
-                "status": 0,
-                "transactionDate": "2024-05-27 11:37:22",
-                "createBy": "admin",
-                "createOn": "2024-05-27 11:37:22"
-              }  
-            ],
+            "data": {
+              "id": 3,
+              "productID": "3",
+              "productName": "Lemari",
+              "amount": "1",
+              "customerName": "Budi",
+              "status": 0,
+              "transactionDate": "2024-05-27 11:37:22",
+              "createBy": "admin",
+              "createOn": "2024-05-27 11:37:22"
+            },
             "status": [
               {
                 "id": 0,
