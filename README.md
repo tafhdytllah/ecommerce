@@ -63,7 +63,8 @@ Before getting started, ensure your system meets the following requirements:
           "errors": null
       }
       ```
-#### 1. Get Transaction by Product and Customer
+    
+#### 2. Get Transaction by Product and Customer
 
 - **Metode:** [GET]
 - **Endpoint:** `/api/transactions/products/3/customers/1`
@@ -108,4 +109,149 @@ Before getting started, ensure your system meets the following requirements:
           "errors": "Transaction is not found"
       }
       ```
+
+#### 3. Create Transaction
+
+- **Metode:** [POST]
+- **Endpoint:** `/api/transactions`
+  #### Request
+  ```json
+  {
+    "product_id": 5,
+    "customer_id": 1,
+    "amount": 8,
+    "status": true,
+    "create_by": "admin"
+  }
+  ```
+
+  #### Response
+    - **Status Code:** [200]
+    - **Response Body:**
+        ```json
+        {
+            "data": {
+              "id": 9,
+              "productID": "5",
+              "productName": "Kompor",
+              "amount": "8",
+              "customerName": "Budi",
+              "status": 1,
+              "transactionDate": "2024-05-27 11:37:22",
+              "createBy": "admin",
+              "createOn": "2024-05-27 11:37:22"
+            },
+            "status": [
+              {
+                "id": 0,
+                "name": "SUCCESS"
+              }
+            ],
+            "errors": null
+        }
+        ```
+
+    - **Status Code:** [404]
+    - **Response Body:**
+        ```json
+        {
+            "data": null,
+            "status": [
+              {
+                "id": 1,
+                "name": "FAILED"
+              }
+            ],
+            "errors": "Transaction is not found"
+        }
+        ```
       
+#### 4. Update Transaction
+
+- **Metode:** [PUT]
+- **Endpoint:** `/api/transactions/products/3/customers/1`
+  #### Request
+  ```json
+  {
+    "amount": 8,
+    "status": false,
+    "create_by": "user"
+  }
+  ```
+
+  #### Response
+    - **Status Code:** [200]
+    - **Response Body:**
+        ```json
+        {
+            "data": {
+              "id": 9,
+              "productID": "3",
+              "productName": "Lemari",
+              "amount": "8",
+              "customerName": "Budi",
+              "status": 0,
+              "transactionDate": "2024-05-27 11:37:22",
+              "createBy": "user",
+              "createOn": "2024-05-27 11:37:22"
+            },
+            "status": [
+              {
+                "id": 0,
+                "name": "SUCCESS"
+              }
+            ],
+            "errors": null
+        }
+        ```
+
+    - **Status Code:** [404]
+    - **Response Body:**
+        ```json
+        {
+            "data": null,
+            "status": [
+              {
+                "id": 1,
+                "name": "FAILED"
+              }
+            ],
+            "errors": "Transaction is not found"
+        }
+        ```
+      
+#### 5. Delete Transaction
+
+- **Metode:** [DELETE]
+- **Endpoint:** `/api/transactions/products/3/customers/1`
+  
+  #### Response
+    - **Status Code:** [200]
+    - **Response Body:**
+        ```json
+        {
+            "data": "OK",
+            "status": [
+              {
+                "id": 0,
+                "name": "SUCCESS"
+              }
+            ],
+            "errors": null
+        }
+        ```
+
+    - **Status Code:** [404]
+    - **Response Body:**
+        ```json
+        {
+            "data": null,
+            "status": [
+              {
+                "id": 1,
+                "name": "FAILED"
+              }
+            ],
+            "errors": "Transaction is not found"
+        }
+        ```
