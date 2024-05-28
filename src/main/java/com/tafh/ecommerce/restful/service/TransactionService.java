@@ -4,7 +4,9 @@ package com.tafh.ecommerce.restful.service;
 import com.tafh.ecommerce.restful.entity.Customer;
 import com.tafh.ecommerce.restful.entity.Product;
 import com.tafh.ecommerce.restful.entity.Transaction;
+import com.tafh.ecommerce.restful.model.CreateTransactionRequest;
 import com.tafh.ecommerce.restful.model.TransactionResponse;
+import com.tafh.ecommerce.restful.model.UpdateTransactionRequest;
 import com.tafh.ecommerce.restful.repository.CustomerRepository;
 import com.tafh.ecommerce.restful.repository.ProductRepository;
 import com.tafh.ecommerce.restful.repository.TransactionRepository;
@@ -16,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,15 +38,15 @@ public class TransactionService {
     private ValidationService validationService;
 
     @Transactional
-    public TransactionResponse findByProductAndCustomer(String productId, String customerId) {
+    public TransactionResponse findFirstByProductAndCustomer(Long productId, Long customerId) {
 
-        Product product = productRepository.findById(Integer.parseInt(productId))
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
 
-        Customer customer = customerRepository.findById(Integer.parseInt(customerId))
+        Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer is not found"));
 
-        Transaction transaction = transactionRepository.findByProductAndCustomer(product, customer)
+        Transaction transaction = transactionRepository.findFirstByProductAndCustomer(product, customer)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction is not found"));
 
         return toTransactionResponse(transaction);
@@ -61,7 +61,67 @@ public class TransactionService {
         return transactions.stream().map(this::toTransactionResponse).toList();
     }
 
+    @Transactional
+    public TransactionResponse create(CreateTransactionRequest request) {
+        validationService.validate(request);
+
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
+
+        Customer customer = customerRepository.findById(request.getCustomerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer is not found"));
+
+        Transaction transaction = new Transaction();
+        transaction.setProduct(product);
+        transaction.setCustomer(customer);
+        transaction.setAmount(request.getAmount());
+        transaction.setStatus(request.getStatus());
+        transaction.setCreateBy(request.getCreateBy());
+        transactionRepository.save(transaction);
+
+        return toTransactionResponse(transaction);
+    }
+
+    @Transactional
+    public TransactionResponse update(UpdateTransactionRequest request, Long productId, Long customerId) {
+        validationService.validate(request);
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer is not found"));
+
+        Transaction transaction = transactionRepository.findFirstByProductAndCustomer(product, customer)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction is not found"));
+
+        transaction.setAmount(request.getAmount());
+        transaction.setStatus(request.getStatus());
+        transaction.setCreateBy(request.getCreateBy());
+        transactionRepository.save(transaction);
+
+        return toTransactionResponse(transaction);
+    }
+
+    @Transactional
+    public void remove(Long productId, Long customerId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product is not found"));
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer is not found"));
+
+        Transaction transaction = transactionRepository.findFirstByProductAndCustomer(product, customer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction is not found"));
+
+        transactionRepository.delete(transaction);
+
+    }
+
     private TransactionResponse toTransactionResponse(Transaction transaction) {
+
+
         return TransactionResponse.builder()
                 .id(transaction.getId())
                 .productID(transaction.getProduct().getId().toString())
@@ -69,15 +129,16 @@ public class TransactionService {
                 .amount(transaction.getAmount().toString())
                 .customerName(transaction.getCustomer().getName())
                 .status(transaction.getStatus())
-                .transactionDate(toLocalDateTime(transaction.getTransactionDate()))
+                .transactionDate(dateTimeFormatter(transaction.getTransactionDate()))
                 .createBy(transaction.getCreateBy())
-                .createOn(toLocalDateTime(transaction.getCreatedAt()))
+                .createOn(dateTimeFormatter(transaction.getCreatedAt()))
                 .build();
     }
 
-    private String toLocalDateTime(Date date) {
-        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    private String dateTimeFormatter(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return localDateTime.format(formatter);
+
+        return dateTime.format(formatter);
     }
+
 }

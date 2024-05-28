@@ -34,6 +34,7 @@ CREATE TABLE transactions(
                              status BOOLEAN NOT NULL,
                              transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
                              create_by VARCHAR(100) NOT NULL,
+                             create_on DATETIME DEFAULT CURRENT_TIMESTAMP,
                              created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                              updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                              FOREIGN KEY (product_id) REFERENCES products(id),
@@ -42,3 +43,4 @@ CREATE TABLE transactions(
 
 INSERT INTO transactions(product_id, customer_id, amount, status, create_by)
 VALUES (2,1,5,1, 'admin'), (1,1,3,1, 'admin'), (3,1,1,0,'admin'), (3,3,10,1,'admin');
+

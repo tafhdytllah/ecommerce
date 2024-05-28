@@ -6,8 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -27,17 +30,24 @@ public class Transaction {
     @Column(name = "status", nullable = false)
     private Boolean status;
 
+    @CreationTimestamp
     @Column(name = "transaction_date")
-    private Date transactionDate;
+    private LocalDateTime transactionDate;
 
     @Column(name = "create_by")
     private String createBy;
 
-    @Column(name = "created_at")
-    private Date createdAt;
+    @CreationTimestamp
+    @Column(name = "create_on")
+    private LocalDateTime createOn;
 
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)

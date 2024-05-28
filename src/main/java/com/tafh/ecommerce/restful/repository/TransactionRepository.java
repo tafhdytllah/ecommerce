@@ -11,6 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, Integer>, JpaSpecificationExecutor<Transaction> {
-    Optional<Transaction> findByProductAndCustomer(Product product, Customer customer);
+public interface TransactionRepository extends JpaRepository<Transaction, Long>, JpaSpecificationExecutor<Transaction> {
+    Optional<Transaction> findFirstByProductAndCustomer(Product product, Customer customer);
 }
